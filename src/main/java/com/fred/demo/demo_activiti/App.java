@@ -25,7 +25,7 @@ public class App {
     private static ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();
 
     public static void main(String[] args) throws Exception {
-//        process();
+        process();
         viewPic();
 
     }

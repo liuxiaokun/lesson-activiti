@@ -4,10 +4,10 @@
     <startEvent id="leave_start" name="Leave Start"></startEvent>
     <userTask id="ask_for_leave" name="Ask For Leave" activiti:assignee="${employeeId}"></userTask>
     <sequenceFlow id="flow1" sourceRef="leave_start" targetRef="ask_for_leave"></sequenceFlow>
-    <exclusiveGateway id="leave_days" name="Leave Days" default="to_manager"></exclusiveGateway>
+    <exclusiveGateway id="leave_days" name="Leave Days"></exclusiveGateway>
     <sequenceFlow id="submit_leave" name="Submit Leave" sourceRef="ask_for_leave" targetRef="leave_days"></sequenceFlow>
-    <userTask id="manager_approval" name="Manager  Approval "></userTask>
-    <userTask id="boss_approval" name="Boss Approval"></userTask>
+    <userTask id="manager_approval" name="Manager  Approval " activiti:candidateUsers="wangzong"></userTask>
+    <userTask id="boss_approval" name="Boss Approval" activiti:candidateGroups="boss"></userTask>
     <sequenceFlow id="to_manager" name="To Manager" sourceRef="leave_days" targetRef="manager_approval">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${day <= 2}]]></conditionExpression>
     </sequenceFlow>
