@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/test">
+  <process id="leaveProcess" name="My leave process" isExecutable="true">
+    <startEvent id="leave_start" name="Leave Start"></startEvent>
+    <userTask id="ask_for_leave" name="Ask For Leave" activiti:assignee="${employeeId}"></userTask>
+    <sequenceFlow id="flow1" sourceRef="leave_start" targetRef="ask_for_leave"></sequenceFlow>
+    <exclusiveGateway id="leave_days" name="Leave Days" default="to_manager"></exclusiveGateway>
+    <sequenceFlow id="submit_leave" name="Submit Leave" sourceRef="ask_for_leave" targetRef="leave_days"></sequenceFlow>
+    <userTask id="manager_approval" name="Manager  Approval "></userTask>
+    <userTask id="boss_approval" name="Boss Approval"></userTask>
+    <sequenceFlow id="to_manager" name="To Manager" sourceRef="leave_days" targetRef="manager_approval">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${day <= 2}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="to_boss" name="To Boss" sourceRef="leave_days" targetRef="boss_approval">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${day > 2}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="manager_reject" name="Manager Reject" sourceRef="manager_approval" targetRef="ask_for_leave">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${flag == false}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="boss_reject" name="Boss Reject" sourceRef="boss_approval" targetRef="ask_for_leave">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${flag == false}]]></conditionExpression>
+    </sequenceFlow>
+    <endEvent id="end_leave" name="End Leave"></endEvent>
+    <sequenceFlow id="manager_approve" name="Manager Approve" sourceRef="manager_approval" targetRef="end_leave">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${flag == true}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="boss_approve" name="Boss Approve" sourceRef="boss_approval" targetRef="end_leave">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${flag == true}]]></conditionExpression>
+    </sequenceFlow>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_leaveProcess">
+    <bpmndi:BPMNPlane bpmnElement="leaveProcess" id="BPMNPlane_leaveProcess">
+      <bpmndi:BPMNShape bpmnElement="leave_start" id="BPMNShape_leave_start">
+        <omgdc:Bounds height="35.0" width="35.0" x="600.0" y="70.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="ask_for_leave" id="BPMNShape_ask_for_leave">
+        <omgdc:Bounds height="55.0" width="105.0" x="565.0" y="160.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="leave_days" id="BPMNShape_leave_days">
+        <omgdc:Bounds height="40.0" width="40.0" x="597.0" y="280.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="manager_approval" id="BPMNShape_manager_approval">
+        <omgdc:Bounds height="55.0" width="105.0" x="370.0" y="273.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="boss_approval" id="BPMNShape_boss_approval">
+        <omgdc:Bounds height="55.0" width="105.0" x="750.0" y="273.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="end_leave" id="BPMNShape_end_leave">
+        <omgdc:Bounds height="35.0" width="35.0" x="600.0" y="420.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="flow1" id="BPMNEdge_flow1">
+        <omgdi:waypoint x="617.0" y="105.0"></omgdi:waypoint>
+        <omgdi:waypoint x="617.0" y="160.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="submit_leave" id="BPMNEdge_submit_leave">
+        <omgdi:waypoint x="617.0" y="215.0"></omgdi:waypoint>
+        <omgdi:waypoint x="617.0" y="280.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="65.0" x="617.0" y="239.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="to_manager" id="BPMNEdge_to_manager">
+        <omgdi:waypoint x="597.0" y="300.0"></omgdi:waypoint>
+        <omgdi:waypoint x="475.0" y="300.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="57.0" x="491.0" y="300.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="to_boss" id="BPMNEdge_to_boss">
+        <omgdi:waypoint x="637.0" y="300.0"></omgdi:waypoint>
+        <omgdi:waypoint x="750.0" y="300.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="40.0" x="660.0" y="300.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="manager_reject" id="BPMNEdge_manager_reject">
+        <omgdi:waypoint x="422.0" y="273.0"></omgdi:waypoint>
+        <omgdi:waypoint x="422.0" y="187.0"></omgdi:waypoint>
+        <omgdi:waypoint x="565.0" y="187.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="100.0" x="430.0" y="191.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="boss_reject" id="BPMNEdge_boss_reject">
+        <omgdi:waypoint x="802.0" y="273.0"></omgdi:waypoint>
+        <omgdi:waypoint x="802.0" y="187.0"></omgdi:waypoint>
+        <omgdi:waypoint x="670.0" y="187.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="100.0" x="700.0" y="191.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="manager_approve" id="BPMNEdge_manager_approve">
+        <omgdi:waypoint x="422.0" y="328.0"></omgdi:waypoint>
+        <omgdi:waypoint x="422.0" y="437.0"></omgdi:waypoint>
+        <omgdi:waypoint x="600.0" y="437.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="100.0" x="430.0" y="419.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="boss_approve" id="BPMNEdge_boss_approve">
+        <omgdi:waypoint x="802.0" y="328.0"></omgdi:waypoint>
+        <omgdi:waypoint x="802.0" y="437.0"></omgdi:waypoint>
+        <omgdi:waypoint x="635.0" y="437.0"></omgdi:waypoint>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="14.0" width="100.0" x="700.0" y="419.0"></omgdc:Bounds>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

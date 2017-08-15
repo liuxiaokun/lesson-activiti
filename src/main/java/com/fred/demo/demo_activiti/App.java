@@ -1,5 +1,8 @@
 package com.fred.demo.demo_activiti;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 import org.activiti.engine.ProcessEngine;
@@ -7,6 +10,7 @@ import org.activiti.engine.ProcessEngines;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,7 +24,13 @@ public class App {
 
     private static ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
+//        process();
+        viewPic();
+
+    }
+
+    private static void process() {
         // 部署
         Deployment deployment = processEngine.getRepositoryService()
                 // 获取流程定义和部署相关的Service
@@ -64,6 +74,34 @@ public class App {
         }
 
         //
-
     }
+
+    
+    // 取出流程图，感觉没啥用，工程里面有
+    public static void viewPic() throws IOException {
+        /** 将生成图片放到文件夹下 */
+        String deploymentId = "5001";
+        // 获取图片资源名称
+        List<String> list = processEngine.getRepositoryService()//
+                .getDeploymentResourceNames(deploymentId);
+        // 定义图片资源的名称
+        String resourceName = "";
+        if (list != null && list.size() > 0) {
+            for (String name : list) {
+                if (name.indexOf(".png") >= 0) {
+                    resourceName = name;
+                }
+            }
+        }
+
+        // 获取图片的输入流
+        InputStream in = processEngine.getRepositoryService()//
+                .getResourceAsStream(deploymentId, resourceName);
+
+        // 将图片生成到D盘的目录下
+        File file = new File("D:/" + resourceName);
+        // 将输入流的图片写到D盘下
+        FileUtils.copyInputStreamToFile(in, file);
+    }
+    
 }
