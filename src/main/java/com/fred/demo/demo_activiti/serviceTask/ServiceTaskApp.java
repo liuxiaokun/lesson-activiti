@@ -1,8 +1,5 @@
 package com.fred.demo.demo_activiti.serviceTask;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.ProcessEngines;
 import org.activiti.engine.RepositoryService;
